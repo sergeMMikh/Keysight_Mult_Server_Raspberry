@@ -1,6 +1,4 @@
 import pyvisa as visa
-import time
-import os
 
 
 class DeviceM:
@@ -9,14 +7,32 @@ class DeviceM:
         with open(cfg_file) as f:
             self.instrument_idn = f.read().strip()
 
+        self.instrument = str()
+        self.idn = str()
+
+    def open_instrument(self):
+
         rm = visa.ResourceManager("@py")
         rm.list_resources()
-        self.instrument = rm.open_resource(self.instrument_idn)
+
+        try:
+            self.instrument = rm.open_resource(self.instrument_idn)
+        except visa.VisaIOError as e:
+            print(e.args)
+            return 'Error'
 
         try:
             self.idn = self.instrument.query("*IDN?")
+        except visa.VisaIOError as e:
+            print(e.args)
+            return 'Error'
 
-            print(self.idn)
+        return self.idn
 
-        except:
-            print('Error open_resource!')
+    def make_meas(self):
+        try:
+            instr_data = self.instrument.query("MEAS?")
+            return instr_data
+        except visa.VisaIOError as e:
+            print(e.args)
+            return 'Error'
