@@ -6,6 +6,7 @@ class DeviceM:
     def __init__(self, cfg_file: str):
         with open(cfg_file) as f:
             self.instrument_idn = f.read().strip()
+            print(f'self.instrument_idn: {self.instrument_idn}')
 
         self.instrument = str()
         self.idn = str()
@@ -14,6 +15,8 @@ class DeviceM:
 
         rm = visa.ResourceManager("@py")
         rm.list_resources()
+
+        print('try to open resource')
 
         try:
             self.instrument = rm.open_resource(self.instrument_idn)

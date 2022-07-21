@@ -8,6 +8,7 @@ def main():
     print(device_m.open_instrument())
 
     while True:
+        print('in cycle')
         recvData = server.recv_server_data().decode().strip()
         match recvData:
             case 'Exit':
